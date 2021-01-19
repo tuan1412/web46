@@ -1,0 +1,17 @@
+{
+  "name": "vote-yes-no",
+  "version": "1.0.0",
+  "description": "Trang web để tạo câu hỏi",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "encode": "4.2.0"
+  }
+}
