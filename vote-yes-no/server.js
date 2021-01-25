@@ -22,8 +22,12 @@ app.use(express.static('public'));
 //   res.sendFile(path.resolve(__dirname, './public/home/style.html'));
 // })
 
-app.get('/', (req, res) => {  
+app.get('/ask', (req, res) => {  
   res.sendFile(path.resolve(__dirname, './public/ask/index.html'));
+})
+
+app.get('/', (req, res) => {  
+  res.sendFile(path.resolve(__dirname, './public/home/index.html'));
 })
 
 app.post('/create-question',  (req, res) => {
@@ -48,16 +52,68 @@ app.post('/create-question',  (req, res) => {
   })
 })
 
+app.get('/random-question', (req, res) => {
+  let data;
+  try {
+    data = JSON.parse(fs.readFileSync('data.json'));
+  } catch (err) {
+    data= [];
+  }
+  
+  const randomIdx = Math.floor(Math.random() * data.length);
+  const foundQuestion = data[randomIdx];
+
+  if (foundQuestion) {
+    return res.send({
+      success: 1,
+      data: foundQuestion
+    })
+  }
+
+  return res.send({
+    success: 0,
+    data: null
+  })
+
+})
+
+app.put('/add-vote/:idQuestion', (req, res) => {
+  const { idQuestion } = req.params;
+  const { type } = req.body;
+
+  let data;
+  try {
+    data = JSON.parse(fs.readFileSync('data.json'));
+  } catch (err) {
+    data= [];
+  }
+  
+  const foundQuestion = data.find(question => {
+    const sameId = parseInt(question._id) === parseInt(idQuestion);
+    return sameId;
+  });
+  
+  if (foundQuestion) {
+    return res.send({
+      success: 1,
+      data: foundQuestion
+    })
+  }
+
+  if (type === 'yes') {
+    
+  }
+
+  return res.send({
+    success: 0,
+    data: null
+  })
+
+})
+
 app.get('*',  (req, res) => {  
   res.sendFile(path.resolve(__dirname, './public/404/index.html'));
 })
-
-// app.get('/style.css', (req, res) => {  
-//   res.sendFile(path.resolve(__dirname, './style.css'));
-// })
-
-// url + method
-// url: /get-a-question method: get, post, put, delete
 
 app.listen(8080, (err) => {
   if (err) throw err;

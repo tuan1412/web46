@@ -14,9 +14,10 @@
 <body>
   <h1>Hãy hỏi cộng đồng một câu hỏi đúng/sai hoặc có/không</h1>
   <form id="form-question">
-    <textarea id="create-textarea"></textarea>
+    <textarea id="create-textarea" maxlength="200" rows="5"></textarea>
     <button type="submit">Gửi</button>
   </form>
+  <div>Còn <span id="restLength">200</span> / 200 kí tự</div>
   <script src="/ask/index.js"></script>  
 </body>
 </html>
