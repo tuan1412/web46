@@ -28,15 +28,26 @@ otherBtn.addEventListener('click', () => {
   getRandomQuestion()
 })
 
-const yesBtn = document.getElementById('yesBtn');
-
-yesBtn.addEventListener('click', async () => {
-  const res = await fetch(
-    `http://localhost:8080/add-vote/${idQuestion}`, 
-    {
-      method: 'PUT',
-      body: new URLSearchParams({ type: 'yes' })
+const handleVote = async (type) => {
+  try {
+    const res = await fetch(
+      `http://localhost:8080/add-vote/${idQuestion}`, 
+      {
+        method: 'PUT',
+        body: new URLSearchParams({ type })
+      }
+    );
+    const jsonRes = await res.json();
+    if (jsonRes.success) {
+      window.location.href = `/question/${jsonRes.data._id}`
     }
-  );
-  const jsonRes = await res.json();
-})
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+const yesBtn = document.getElementById('yesBtn');
+const noBtn = document.getElementById('noBtn');
+
+yesBtn.addEventListener('click', () => handleVote('yes'));
+noBtn.addEventListener('click', () => handleVote('no'))

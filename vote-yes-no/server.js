@@ -30,6 +30,32 @@ app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, './public/home/index.html'));
 })
 
+app.get('/question/:idQuestion', (req, res) => {  
+  res.sendFile(path.resolve(__dirname, './public/detail/index.html'));
+})
+
+app.get('/detail/:idQuestion', (req, res) => {  
+  const { idQuestion } = req.params;
+
+  let data;
+  try {
+    data = JSON.parse(fs.readFileSync('data.json'));
+  } catch (err) {
+    data= [];
+  }
+  
+  const foundQuestion = data.find(question => {
+    const sameId = parseInt(question._id) === parseInt(idQuestion);
+    return sameId;
+  });
+
+  if (!foundQuestion) {
+    return res.send({ success: 0, data: null })
+  }
+
+  return res.send({ success: 1, data: foundQuestion })
+})
+
 app.post('/create-question',  (req, res) => {
   let data;
   try {
@@ -93,20 +119,27 @@ app.put('/add-vote/:idQuestion', (req, res) => {
     return sameId;
   });
   
-  if (foundQuestion) {
+  if (!foundQuestion) {
     return res.send({
-      success: 1,
-      data: foundQuestion
+      success: 0,
+      data: null
     })
   }
 
-  if (type === 'yes') {
-    
+  if (type === 'yes' || type === 'no') {
+    foundQuestion[type]++;
+  } else {
+    return res.send({
+      success: 0,
+      data: null
+    })
   }
 
+  fs.writeFileSync('./data.json', JSON.stringify(data));
+
   return res.send({
-    success: 0,
-    data: null
+    success: 1,
+    data: foundQuestion
   })
 
 })
