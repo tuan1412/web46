@@ -1,20 +1,21 @@
-const contentDOM = document.getElementById('contentQuestion');
-const totalVoteDOM = document.getElementById('totalVote');
-const percentYesVoteDOM = document.getElementById('percentYesVote');
-const percentNoVoteDOM = document.getElementById('percentNoVote')
-const otherBtn = document.getElementById('otherBtn');
+const $contentDOM = $('#contentQuestion');
+const $totalVoteDOM = $('#totalVote');
+const $percentYesVoteDOM = $('#percentYesVote');
+const $percentNoVoteDOM = $('#percentNoVote')
+const $otherBtn = $('#otherBtn');
 
 const getDetailQuestion = async (id) => {
   try {
-    const res = await fetch(`http://localhost:8080/detail/${id}`);
-    const jsonRes = await res.json();
+    const res = await $.ajax({
+      url: `http://localhost:8080/detail/${id}`,
+    });
 
-    if (jsonRes.success) {
-      const { data:question } = jsonRes;
+    if (res.success) {
+      const { data:question } = res;
       const { content, yes, no } = question;
 
-      contentDOM.innerHTML = content;
-      totalVoteDOM.innerHTML = yes + no;
+      $contentDOM.html(content);
+      $totalVoteDOM.html(yes + no);
 
       const yesNumber = parseInt(yes);
       const noNumber = parseInt(no);
@@ -23,8 +24,8 @@ const getDetailQuestion = async (id) => {
       const percentYes = total === 0 ? parseFloat(50).toFixed(2) : (yes * 100  / total).toFixed(2)
       const percentNo = (100 - parseFloat(percentYes)).toFixed(2);
 
-      percentYesVoteDOM.innerHTML = percentYes;
-      percentNoVoteDOM.innerHTML = percentNo;
+      $percentYesVoteDOM.html(percentYes);
+      $percentNoVoteDOM.html(percentNo);
 
     }
   } catch (err) {
