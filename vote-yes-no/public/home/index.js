@@ -55,7 +55,8 @@ const handleVote = async (type) => {
       data: { type }
     })
     if (res.success) {
-      window.location.href = `/question/${res.data._id}`
+      console.log(res);
+      // window.location.href = `/question/${res.data._id}`
     }
   } catch (err) {
     console.log(err);
@@ -96,6 +97,16 @@ const $resultBtn = $('#resultBtn');
 $resultBtn.on('click', () => {
   window.location.href = `/question/${idQuestion}`;
 });
+
+$('#delBtn').on('click', async () => {
+  const res = await $.ajax({
+    url: `http://localhost:8080/question/${idQuestion}`,
+    method: 'DELETE',
+  });
+  if (res.success) {
+    alert('Xóa thành công');
+  }
+})
 
 // voteBtn.addEventListener('click', () => handleVote('yes'));
 
