@@ -41,9 +41,36 @@ app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, './public/home/index.html'));
 });
 
+app.get('/question/max-vote', async (req, res) => {
+  // const maxYesQuestion = await QuestionModel.find().sort({ yes: -1 }).skip(0).limit(1);
+  // res.send({
+  //   success: 1,
+  //   data: maxYesQuestion[0]
+  // })
+  const maxYesQuestion = await QuestionModel.aggregate()
+    .group({
+      _id: null,
+      doc: {
+        $max: {
+          yes: '$yes',
+          _id: '$_id',
+          content: '$content'
+        }
+      } 
+    });
+  
+  return res.send({ success: 1, data: maxYesQuestion[0] })
+})
+
 app.get('/question/:idQuestion', (req, res) => {
   res.sendFile(path.resolve(__dirname, './public/detail/index.html'));
 });
+
+app.get('/search', (req, res) => {
+  res.sendFile(path.resolve(__dirname, './public/search/index.html'));
+});
+
+
 
 // 80% tác vụ làm backend CRUD
 // C: create
@@ -187,13 +214,26 @@ app.get('/random-question', async (req, res) => {
 //   }
 // });
 
+app.get('/search-question', async (req, res) => {
+  const { keyword } = req.query;
+
+  const keywordRegex = new RegExp(keyword, 'i');
+  const foundQuestions = await QuestionModel.find({ content: { $regex: keywordRegex }});
+
+  return res.send({
+    success: 1,
+    data: foundQuestions
+  })
+})
+
+// cách truyền dữ liệu qua pathname thì thường dùng khi truyền id
 app.put('/add-vote/:idQuestion', async (req, res) => {
   try {
     const { idQuestion } = req.params;
     const { type } = req.body;
 
     const foundQuestion = await QuestionModel
-      .findOne(
+      .findOneAndUpdate(
         { _id: idQuestion },
         {
           $inc: {
