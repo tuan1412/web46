@@ -55,12 +55,53 @@ app.post('/api/flashcards', async (req, res) => {
   }
 })
 
+app.get('/api/flashcards/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const foundCard = await FlashcardModel.findOne({ _id: id });
+
+    if (!foundCard) {
+      return res.send({ success: 0 })
+    }
+
+    res.send({ success: 1, data: foundCard })
+  } catch (err) {
+    res.status(500).send({ success: 0 })
+  } 
+})
+
+app.put('/api/flashcards/:id', async (req, res) => {
+  const { id } = req.params;
+  const updateData = req.body;
+
+  try {
+    const updatedCard = await FlashcardModel.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true }
+    )
+
+    if (!updatedCard) {
+      return res.send({ success: 0 })
+    }
+
+    res.send({ success: 1, data: updatedCard })
+  } catch (err) {
+    res.status(500).send({ success: 0 })
+  }
+})
+
 app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, './public/html/home.html'));
 })
 
 app.get('/create', (req, res) => {
   res.sendFile(path.resolve(__dirname, './public/html/create.html'));
+})
+
+app.get('/edit/flashcards/:id', (req, res) => {
+  res.sendFile(path.resolve(__dirname, './public/html/edit.html'));
 })
 
 app.listen(8080, (err) => {

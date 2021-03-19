@@ -52,10 +52,11 @@
       <div class="flip-card">
         <div class="flip-card-inner">
           <div class="flip-card-front">
-            <div>Example front</div>
+            <div id="category">Category</div>
+            <div id="frontSide">Example front</div>
           </div>
           <div class="flip-card-back">
-            <div>Example back</div>
+            <div id="backSide">Example back</div>
           </div>
         </div>
       </div>
@@ -63,7 +64,10 @@
     <!-- End flip card-->
     <!-- Action buttons-->
     <div class="d-flex justify-content-center mt-4">
-      <button id="flipBtn" class="btn btn-primary">Flip</button>
+      <button id="flipBtn" class="btn btn-primary me-1">Flip</button>
+      <button id="rememberBtn" class="btn btn-success me-1">Remember</button>
+      <button id="forgetBtn" class="btn btn-danger me-1" style="display:none;">Forget</button>
+      <button id="editBtn" class="btn btn-warning me-1">Edit</button>
       <button id="nextBtn" class="btn btn-primary">Next</button>
     </div>
     <!-- End action buttons-->
