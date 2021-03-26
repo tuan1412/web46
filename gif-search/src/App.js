@@ -13,7 +13,7 @@ class App extends React.Component {
     this.state = {
       label: 'Tim kiem',
       isLoading: false,
-      images: []
+      images: [],
     };
   }
 
@@ -21,19 +21,26 @@ class App extends React.Component {
     this.setState({ isLoading: newLoading });
   }
 
-  changeImages = (newImages) => {
-    this.setState({
-      images: newImages,
-      isLoading: false
-    });
+  changeImages = (newImages, offset) => {
+    if (offset === 0) {
+      this.setState({
+        images: newImages,
+        isLoading: false
+      });
+    } else {
+      this.setState(prevState => {
+        return {
+          isLoading: false,
+          images: [...prevState.images, ...newImages]
+        }
+      })
+    }
+    
   };
 
   renderImages = () => {
-    const { isLoading, images } = this.state;
+    const { images } = this.state;
 
-    if (isLoading) {
-      return <Loading />
-    }
     return images.map((image, idx) => {
       return (
         <ImageCard
@@ -55,6 +62,7 @@ class App extends React.Component {
             changeLoading={this.changeLoading}
           />
           <div className="content pt-4">{this.renderImages()}</div>
+          {this.state.isLoading && <Loading />}
         </div>
       </div>
     );
