@@ -1,86 +1,72 @@
 import React from 'react';
 import Header from './components/Header/Header';
-import SearchForm from './components/SearchForm/SearchForm'
+import SearchForm from './components/SearchForm/SearchForm';
 import ImageCard from './components/ImageCard/ImageCard';
+import Loading from './components/Loading/Loading';
 
 import './App.css';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    console.log('constructor')
+    console.log('constructor');
     this.state = {
-      label: "Tim kiem",
-      images: [
-        {
-          imageUrl: 'https://meocun.com/wp-content/uploads/cho-alaska-14-giong-cho-dep-nhat-the-gioi-1-600x400.jpg',
-          description: 'Gau gau'
-        },
-        {
-          imageUrl: 'https://media-cdn.laodong.vn/Storage/NewsPortal/2019/7/31/747087/Vua-Su-Tu-2.jpg',
-          description: 'Gru gru'
-        },
-        {
-          imageUrl: 'https://media-cdn.laodong.vn/Storage/NewsPortal/2019/7/31/747087/Vua-Su-Tu-2.jpg',
-          description: 'Gru gru'
-        },
-      ]
+      label: 'Tim kiem',
+      isLoading: false,
+      images: [],
+    };
+  }
+
+  changeLoading = (newLoading) => {
+    this.setState({ isLoading: newLoading });
+  }
+
+  changeImages = (newImages, offset) => {
+    if (offset === 0) {
+      this.setState({
+        images: newImages,
+        isLoading: false
+      });
+    } else {
+      this.setState(prevState => {
+        return {
+          isLoading: false,
+          images: [...prevState.images, ...newImages]
+        }
+      })
     }
-  }
-
-  componentDidMount() {
-    console.log('didmount')
-
-    setInterval(() => {
-      this.setState({ label: "Let's search" + Date.now()})
-    }, 3000)
-  }
-
-  componentDidUpdate() {
-    console.log('did update')
-
-  }
-
-  componentWillUnmount() {
     
-  }
+  };
 
   renderImages = () => {
-    return this.state.images.map((image, idx) => {
+    const { images } = this.state;
+
+    return images.map((image, idx) => {
       return (
         <ImageCard
           key={idx}
           imageUrl={image.imageUrl}
           description={image.description}
         />
-      )
-    })
-  }
+      );
+    });
+  };
   // JSX
   render() {
-    console.log('render');
     return (
       <div className="App">
         <Header label={this.state.label} />
         <div className="container">
-          <SearchForm />
-          <div className="content pt-4">
-            {/* {this.state.images.map((image, idx) => {
-              return (
-                <ImageCard
-                  key={idx}
-                  imageUrl={image.imageUrl}
-                  description={image.description}
-                />
-              )
-            })} */}
-            {this.renderImages()}
-          </div>
+          <SearchForm
+            changeImages={this.changeImages}
+            changeLoading={this.changeLoading}
+          />
+          <div className="content pt-4">{this.renderImages()}</div>
+          {this.state.isLoading && <Loading />}
         </div>
       </div>
     );
   }
-  
 }
 
 export default App;
