@@ -6,6 +6,8 @@ const AuthRouter = require('./modules/auth/auth.router');
 const PostRouter = require('./modules/post/post.router');
 const CommentRouter = require('./modules/comment/comment.router');
 
+const logger = require('./middlewares/logger');
+
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -18,10 +20,14 @@ mongoose.connect(process.env.MONGODB_URI, {
 const app = express();
 
 app.use(express.json());
+// middleware => parse du lieu tu client => gan no vao trong req.body
 // req.body mới có data
 
+app.use('*', logger);
+// global middleware
 app.use('/api/auth', AuthRouter);
 app.use('/api/posts', PostRouter);
+// middleware
 app.use('/api/comments', CommentRouter);
 
 app.use('*', (req, res) => res.status(404).send({ success: 0, message: '404 not found' }))
