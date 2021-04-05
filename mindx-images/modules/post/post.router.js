@@ -24,6 +24,17 @@ Router.get('/', async (req, res) => {
   }
 });
 
+Router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const post = await postController.getDetailPost(id);
+    res.send({ success: 1, data: post });
+  } catch (err) {
+    res.status(500).send({ success: 0, message: err.message });
+  }
+})
+
 // api/posts
 // tạo bài viêt
 // check token o trong header co hop le hay ko

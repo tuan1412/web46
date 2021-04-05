@@ -6,10 +6,12 @@ const CommentSchema = new mongoose.Schema(
       type: String,
     },
     createdBy: {
-      type: mongoose.Types.ObjectId // userId
+      type: mongoose.Types.ObjectId,
+      ref: 'user', // userId
     },
     post: {
-      type: mongoose.Types.ObjectId // postId
+      type: mongoose.Types.ObjectId,
+      ref: 'post' // postId
     }
   },
   { timestamps: true } // createdAt, updatedAt
