@@ -14,6 +14,17 @@ const createComment = async ({ content, createdBy, postId }) => {
   return newComment;
 }
 
+const getComments = async (postId) => {
+  const comments = await CommentModel.find({ post: postId })
+    .populate('createdBy', 'email')
+    .populate('post', 'title');
+
+  // b1: tạo ref từ schema
+  // b2: populate dùng trong find()
+  return comments;
+}
+
 module.exports = {
-  createComment
+  createComment,
+  getComments
 }
