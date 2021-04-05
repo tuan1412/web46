@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 require('dotenv').config();
+
 
 const AuthRouter = require('./modules/auth/auth.router');
 const PostRouter = require('./modules/post/post.router');
@@ -18,7 +20,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 });
 
 const app = express();
-
+app.use(cors())
 app.use(express.json());
 // middleware => parse du lieu tu client => gan no vao trong req.body
 // req.body mới có data
