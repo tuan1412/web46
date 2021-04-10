@@ -18,7 +18,7 @@ Router.get('/', async (req, res) => {
 
     const [data, total] = await postController.getPosts({ offset, limit });
 
-    res.send({ success: 0, data: { data, total } });
+    res.send({ success: 1, data: { data, total } });
   } catch (err) {
     res.status(500).send({ success: 0, message: err.message });
   }

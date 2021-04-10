@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
+const cors = require('cors'); // tránh lỗi cross origin resource sharing
 require('dotenv').config();
 
 
@@ -26,6 +26,7 @@ app.use(express.json());
 // req.body mới có data
 
 app.use('*', logger);
+
 // global middleware
 app.use('/api/auth', AuthRouter);
 app.use('/api/posts', PostRouter);

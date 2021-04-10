@@ -9,6 +9,7 @@ import './App.css';
 
 import Login from './pages/Login/Login';
 import SignUp from './pages/Signup/Signup';
+import Home from './pages/Home/Home';
 
 // Bộ UI components: React Bootstrap, Material UI, Antd design, Chakra UI
 function App() {
@@ -20,7 +21,7 @@ function App() {
     <Router>
       <Switch>
         <Route path="/" exact>
-          <div>Home</div>
+          <Home />
         </Route>
         <Route path="/login">
           <Login />
