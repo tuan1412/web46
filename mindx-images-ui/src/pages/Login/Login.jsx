@@ -1,7 +1,8 @@
 import AuthLayout from '../../components/Layout/AuthLayout';
 import { Form, Button } from 'react-bootstrap';
 import { useState } from 'react';
-import axios from 'axios';
+import { Link } from 'react-router-dom';
+import client from '../../api';
 
 function Login() {
   /*
@@ -39,8 +40,11 @@ function Login() {
     */
     console.log(email, password);
     
-    const res = await axios({
-      url: 'http://localhost:9000/api/auth/login',
+    // origin: http://localhost:3000
+    // call server có origin http://localhost:8080
+    // lỗi cors
+    const res = await client({
+      url: '/api/auth/login',
       method: 'POST',
       data: {
         email,
@@ -80,6 +84,9 @@ function Login() {
             Submit
           </Button>
         </Form>
+      </div>
+      <div className="navigate mt-4">
+        Not have acc? <Link to="/signup">Signup</Link>
       </div>
     </AuthLayout>
   );
