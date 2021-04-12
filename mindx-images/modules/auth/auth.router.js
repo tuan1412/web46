@@ -1,6 +1,7 @@
 const express = require('express');
 const Router = express.Router();
 const AuthController = require('./auth.controller');
+const isAuth = require('../../middlewares/isAuth');
 
 // api/auth/signup
 Router.post('/signup', async (req, res) => {
@@ -29,6 +30,17 @@ Router.post('/login', async (req, res) => {
     res.status(500).send({ success: 0, message: err.message });
   }
 });
+
+Router.get('/user', isAuth, async (req, res) => {
+  try {
+    const user = req.user;
+
+    res.send({ success: 1, data: user });
+  } catch (err) {
+    res.status(500).send({ success: 0, message: err.message });
+  }
+});
+
 
 module.exports = Router;
 

@@ -1,8 +1,9 @@
 import AuthLayout from '../../components/Layout/AuthLayout';
 import { Form, Button } from 'react-bootstrap';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useContext } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import client from '../../api';
+import { AuthContext } from '../../App';
 
 function Login() {
   /*
@@ -16,6 +17,8 @@ function Login() {
   */
   const [email, setEmail] = useState('tuan@gmail.com');
   const [password, setPassword] = useState('');
+  const history = useHistory();
+  const { setUser } = useContext(AuthContext);
 
   /*
     call useState => ket qua array gom 2 gia tri [a, b]
@@ -53,10 +56,17 @@ function Login() {
     })
 
     if (res.data.success) {
-      alert('Login success');
+      const { user, token } = res.data.data;
+      // ghi nhớ token (cookie)
+      localStorage.setItem('token', token);
+      // chuyển sang trang home
+      // cách chuyển trang khi handle trong function
+      setUser(user);
+      history.push('/');
     }
   }
 
+  // thẻ Link thì để sinh ra khi ấn click vào content của Link
   return (
     <AuthLayout>
       <div className="form-wrapper">
