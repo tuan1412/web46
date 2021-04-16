@@ -16,7 +16,9 @@ function MainLayout({ children }) {
     history.push('/login');
   }
 
-  console.log('main layout', user);
+  const pushToUpload = () => {
+    history.push('/create')
+  }
 
   return (
     <div className="main-layout">
@@ -38,7 +40,7 @@ function MainLayout({ children }) {
               <Nav className="ml-auto">
                 <Navbar.Text>Sign in as {user.email}</Navbar.Text>
                 <NavDropdown id="basic-nav-dropdown">
-                  <NavDropdown.Item>Upload</NavDropdown.Item>
+                  <NavDropdown.Item onClick={pushToUpload}>Upload</NavDropdown.Item>
                   <NavDropdown.Item onClick={onLogout}>Logout</NavDropdown.Item>
                 </NavDropdown>
               </Nav>
