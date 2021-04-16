@@ -3,15 +3,40 @@ import { Row, Col, Form, Button } from 'react-bootstrap';
 import './create.style.css';
 import { useState } from 'react';
 import ImageUploading from 'react-images-uploading';
+import storage from '../../firebase';
+import client from '../../api';
 
 function Create() {
   const [form, setForm] = useState({ title: '', description: '' });
   const [images, setImages] = useState([]);
 
-  const onHandleSubmit = (e) => {
+  const onHandleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(form);
+    const image = images[0];
+    if (image && form.title ) {
+      try {
+        const imageUrl = await uploadFile(image.file);
+      
+        const res = await client({
+          url: '/api/posts',
+          method: 'POST',
+          data: {
+            title: form.title,
+            description: form.description,
+            imageUrl: imageUrl,
+          }
+        })
+        if (res.data.success) {
+          alert('Success');
+          setForm({ title: '', description: ''});
+          setImages([]);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    } 
+    
   };
 
   const onChangeForm = (e) => {
@@ -26,9 +51,35 @@ function Create() {
     });
   };
 
+  const uploadFile = (file) => {
+    // cach chuyen tu dang callback sang promise de async await
+    // chuyen cho minh readFile cua fs sang promise
+    return new Promise((resolve, reject) => {
+      const uploadTask = storage.ref().child(file.name).put(file);
+
+      // chinh sua ham onProgress de co the them progress chay duoi cai anh day
+      const onProgress = () => {}
+      const onError = (err) => reject(err);
+
+      const onSuccess = () => {
+        uploadTask
+          .snapshot
+          .ref
+          .getDownloadURL()
+          .then((downloadURL) => resolve(downloadURL))
+      };
+
+      uploadTask.on('state_changed', onProgress, onError, onSuccess)
+    })
+  }
+
   const onChangeImage = (imageList, addUpdateIndex) => {
     setImages(imageList);
   };
+
+  const hiddenButton = images.length > 0;
+  // custom giao dien bang css
+  const clsUploadBtn = hiddenButton ? 'hidden' : '';
 
   return (
     <MainLayout>
@@ -44,12 +95,12 @@ function Create() {
               {({ imageList, onImageUpload, onImageUpdate, onImageRemove }) => {
                 return (
                   <div className="upload-wrapper">
-                    <Button onClick={onImageUpload}>Upload image</Button>
+                    <Button className={clsUploadBtn} onClick={onImageUpload}>Upload image</Button>
                     {imageList.map((image, index) => {
                       return (
                         <div key={index} className="image-item">
                           <div className="image-wrapper" onClick={onImageUpdate}>
-                            <img src={image.data_url} alt="" width="100" />
+                            <img src={image.data_url} alt="" />
                           </div>
                           <span className="remove-btn" onClick={onImageRemove}>x</span>
                         </div>
