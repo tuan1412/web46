@@ -17,6 +17,7 @@ import client from './api';
 import PublicRoute from './components/Route/PublicRoute';
 import GuessRoute from './components/Route/GuessRoute';
 import ProtectedRoute from './components/Route/ProtectedRoute';
+import Create from './pages/Create/Create';
 
 // Bộ UI components: React Bootstrap, Material UI, Antd design, Chakra UI
 
@@ -84,7 +85,7 @@ function App() {
             <SignUp />
           </GuessRoute>
           <ProtectedRoute path="/create">
-            <div>Create</div>
+            <Create />
           </ProtectedRoute>
           <PublicRoute path="/posts/:id">
             <div>Detail post</div>
